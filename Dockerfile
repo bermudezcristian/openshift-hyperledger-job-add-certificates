@@ -20,10 +20,19 @@ LABEL name="bermudezcristian/openshift-hyperledger-job-add-certificates" \
       io.k8s.description="openshift-hyperledger-job-add-certificates" \
       io.k8s.display-name="openshift-hyperledger-job-add-certificates"
 
-# Install latest mssql-server package
-RUN yum install -y  && \
-    yum clean all && \
-    rm -rf /var/cache/yum
+COPY cryptogen /opt/bin/cryptogen
+COPY configtxgen /opt/bin/configtxgen
+
+ENV PATH=${PATH}:/opt/mssql/bin:/opt/mssql-tools/bin
 
 ### Containers should not run as root as a good practice
 USER 10001
+
+VOLUME /opt/volumes/ca-persistentvolumeclaim
+VOLUME /opt/volumes/orderer-1-persistentvolumeclaim
+VOLUME /opt/volumes/orderer-2-persistentvolumeclaim
+VOLUME /opt/volumes/orderer-3-persistentvolumeclaim
+VOLUME /opt/volumes/peer-1-persistentvolumeclaim
+VOLUME /opt/volumes/peer-2-persistentvolumeclaim
+VOLUME /opt/volumes/peer-3-persistentvolumeclaim
+VOLUME /opt/volumes/peer-4-persistentvolumeclaim
