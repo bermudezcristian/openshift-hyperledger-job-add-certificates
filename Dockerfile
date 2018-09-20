@@ -20,6 +20,12 @@ LABEL name="bermudezcristian/openshift-hyperledger-job-add-certificates" \
       io.k8s.description="openshift-hyperledger-job-add-certificates" \
       io.k8s.display-name="openshift-hyperledger-job-add-certificates"
 
+# Create the volumes
+VOLUME /opt/volumes/ca-persistentvolumeclaim /opt/volumes/orderer-1-persistentvolumeclaim \
+/opt/volumes/orderer-2-persistentvolumeclaim /opt/volumes/orderer-3-persistentvolumeclaim \
+/opt/volumes/peer-1-persistentvolumeclaim /opt/volumes/peer-2-persistentvolumeclaim \
+/opt/volumes/peer-3-persistentvolumeclaim /opt/volumes/peer-4-persistentvolumeclaim
+
 # Install git
 RUN yum install -y git && \
     yum clean all && \
@@ -31,16 +37,13 @@ RUN git clone https://github.com/hyperledger/fabric-samples
 
 # Run script to get the binary files
 WORKDIR /app/fabric-samples
-RUN sh fabric-samples/scripts/bootstrap.sh
+RUN sh scripts/bootstrap.sh
 
-#COPY script.sh script.sh
+# Add the binary path to ENV
+ENV PATH=${PATH}:/app/fabric-samples/bin
 
-### Containers should not run as root as a good practice
-USER 10001
+# Copy the script that moves the certificates to the volumes
+COPY script.sh script.sh
 
-VOLUME /opt/volumes/ca-persistentvolumeclaim /opt/volumes/orderer-1-persistentvolumeclaim \
-/opt/volumes/orderer-2-persistentvolumeclaim /opt/volumes/orderer-3-persistentvolumeclaim \
-/opt/volumes/peer-1-persistentvolumeclaim /opt/volumes/peer-2-persistentvolumeclaim \
-/opt/volumes/peer-3-persistentvolumeclaim /opt/volumes/peer-4-persistentvolumeclaim
-
+# Add the entrypoint to run the script automatically at startup ? WTF
 #ENTRYPOINT ["script.sh"]
