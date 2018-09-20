@@ -20,19 +20,27 @@ LABEL name="bermudezcristian/openshift-hyperledger-job-add-certificates" \
       io.k8s.description="openshift-hyperledger-job-add-certificates" \
       io.k8s.display-name="openshift-hyperledger-job-add-certificates"
 
-COPY cryptogen /opt/bin/cryptogen
-COPY configtxgen /opt/bin/configtxgen
+# Install git
+RUN yum install -y git && \
+    yum clean all && \
+    rm -rf /var/cache/yum
 
-ENV PATH=${PATH}:/opt/mssql/bin:/opt/mssql-tools/bin
+# Clone repo
+WORKDIR /app
+RUN git clone https://github.com/hyperledger/fabric-samples
+
+# Run script to get the binary files
+WORKDIR /app/fabric-samples
+RUN sh fabric-samples/scripts/bootstrap.sh
+
+#COPY script.sh script.sh
 
 ### Containers should not run as root as a good practice
 USER 10001
 
-VOLUME /opt/volumes/ca-persistentvolumeclaim
-VOLUME /opt/volumes/orderer-1-persistentvolumeclaim
-VOLUME /opt/volumes/orderer-2-persistentvolumeclaim
-VOLUME /opt/volumes/orderer-3-persistentvolumeclaim
-VOLUME /opt/volumes/peer-1-persistentvolumeclaim
-VOLUME /opt/volumes/peer-2-persistentvolumeclaim
-VOLUME /opt/volumes/peer-3-persistentvolumeclaim
-VOLUME /opt/volumes/peer-4-persistentvolumeclaim
+VOLUME /opt/volumes/ca-persistentvolumeclaim /opt/volumes/orderer-1-persistentvolumeclaim \
+/opt/volumes/orderer-2-persistentvolumeclaim /opt/volumes/orderer-3-persistentvolumeclaim \
+/opt/volumes/peer-1-persistentvolumeclaim /opt/volumes/peer-2-persistentvolumeclaim \
+/opt/volumes/peer-3-persistentvolumeclaim /opt/volumes/peer-4-persistentvolumeclaim
+
+#ENTRYPOINT ["script.sh"]
