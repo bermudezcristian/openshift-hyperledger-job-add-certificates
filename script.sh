@@ -1,39 +1,13 @@
 #!/bin/sh
-#
-# Copyright IBM Corp All Rights Reserved
-#
-# SPDX-License-Identifier: Apache-2.0
-#
-CHANNEL_NAME=mychannel
 
-# remove previous crypto material and config transactions
-rm -fr config/*
-rm -fr crypto-config/*
-
-# generate crypto material
-cryptogen generate --config=./crypto-config.yaml
-if [ "$?" -ne 0 ]; then
-  echo "Failed to generate crypto material..."
-  exit 1
-fi
-
-# generate genesis block for orderer
-configtxgen -profile OneOrgOrdererGenesis -outputBlock ./config/genesis.block
-if [ "$?" -ne 0 ]; then
-  echo "Failed to generate orderer genesis block..."
-  exit 1
-fi
-
-# generate channel configuration transaction
-configtxgen -profile OneOrgChannel -outputCreateChannelTx ./config/channel.tx -channelID $CHANNEL_NAME
-if [ "$?" -ne 0 ]; then
-  echo "Failed to generate channel configuration transaction..."
-  exit 1
-fi
-
-# generate anchor peer transaction
-configtxgen -profile OneOrgChannel -outputAnchorPeersUpdate ./config/Org1MSPanchors.tx -channelID $CHANNEL_NAME -asOrg Org1MSP
-if [ "$?" -ne 0 ]; then
-  echo "Failed to generate anchor peer update for Org1MSP..."
-  exit 1
-fi
+# CA
+cp -Rf /app/fabric-samples/basic-network/crypto-config/peerOrganizations/org1.example.com/ca/* /opt/volumes/ca-persistentvolumeclaim/
+# ORDERER
+cp -Rf /app/fabric-samples/basic-network/config/* /opt/volumes/orderer-1-persistentvolumeclaim/
+cp -Rf /app/fabric-samples/basic-network/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/* /opt/volumes/orderer-2-persistentvolumeclaim/
+cp -Rf /app/fabric-samples/basic-network/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/* /opt/volumes/orderer-3-persistentvolumeclaim/
+# PEER
+# /opt/volumes/peer-1-persistentvolumeclaim/ NOTHING TO DO
+cp -Rf /app/fabric-samples/basic-network/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/msp/* /opt/volumes/peer-2-persistentvolumeclaim/
+cp -Rf /app/fabric-samples/basic-network/crypto-config/peerOrganizations/org1.example.com/users/* /opt/volumes/peer-3-persistentvolumeclaim/
+cp -Rf /app/fabric-samples/basic-network/config/* /opt/volumes/peer-4-persistentvolumeclaim/

@@ -31,6 +31,8 @@ RUN yum install -y git && \
     yum clean all && \
     rm -rf /var/cache/yum
 
+USER 10001
+
 # Clone repo
 WORKDIR /app
 RUN git clone https://github.com/hyperledger/fabric-samples
@@ -45,5 +47,5 @@ ENV PATH=${PATH}:/app/fabric-samples/bin
 # Copy the script that moves the certificates to the volumes
 COPY script.sh script.sh
 
-# Add the entrypoint to run the script automatically at startup ? WTF
-#ENTRYPOINT ["script.sh"]
+# Add the Command to run the script automatically at startup ? WTF
+CMD ["/app/fabric-samples/script.sh"]
