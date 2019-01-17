@@ -24,7 +24,9 @@ LABEL name="bermudezcristian/openshift-hyperledger-job-add-certificates" \
 VOLUME /opt/volumes/ca-persistentvolumeclaim /opt/volumes/orderer-1-persistentvolumeclaim \
 /opt/volumes/orderer-2-persistentvolumeclaim /opt/volumes/orderer-3-persistentvolumeclaim \
 /opt/volumes/peer-1-persistentvolumeclaim /opt/volumes/peer-2-persistentvolumeclaim \
-/opt/volumes/peer-3-persistentvolumeclaim /opt/volumes/peer-4-persistentvolumeclaim
+/opt/volumes/peer-3-persistentvolumeclaim /opt/volumes/peer-4-persistentvolumeclaim \
+/opt/volumes/peer-3-persistentvolumeclaim /opt/volumes/explorer-1-persistentvolumeclaim \
+/opt/volumes/explorer-2-persistentvolumeclaim
 
 # Install git
 RUN yum install -y git && \
@@ -44,3 +46,4 @@ ENV PATH=${PATH}:/app/fabric-samples/bin
 
 # Copy the script that moves the certificates to the volumes
 COPY script.sh script.sh
+COPY config.json /opt/volumes/explorer-2-persistentvolumeclaim/config.json

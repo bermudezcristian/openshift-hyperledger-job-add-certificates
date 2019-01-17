@@ -11,5 +11,7 @@ cp -Rf /app/fabric-samples/basic-network/crypto-config/peerOrganizations/org1.ex
 cp -Rf /app/fabric-samples/basic-network/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/msp/* /opt/volumes/peer-2-persistentvolumeclaim/
 cp -Rf /app/fabric-samples/basic-network/crypto-config/peerOrganizations/org1.example.com/users/* /opt/volumes/peer-3-persistentvolumeclaim/
 cp -Rf /app/fabric-samples/basic-network/config/* /opt/volumes/peer-4-persistentvolumeclaim/
+# EXPLORER
+cp -Rf /app/fabric-samples/basic-network/crypto-config/* /opt/volumes/explorer-1-persistentvolumeclaim/
 
 exit 0
