@@ -46,4 +46,3 @@ ENV PATH=${PATH}:/app/fabric-samples/bin
 
 # Copy the script that moves the certificates to the volumes
 COPY script.sh script.sh
-COPY config.json /opt/volumes/explorer-2-persistentvolumeclaim/config.json
